@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badges - EduConnect LMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="badges-page">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-container">
+            <div class="header-brand">
+                <a href="dashboard.html" class="brand-link">
+                    <h1 class="brand-title">EduConnect</h1>
+                    <span class="brand-subtitle">Badge System</span>
+                </a>
+            </div>
+            
+            <div class="header-user">
+                <div class="user-info">
+                    <span id="user-name" class="user-name">Loading...</span>
+                    <span id="user-role" class="user-role">User</span>
+                </div>
+                <div class="user-actions">
+                    <a href="dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+                    <button id="logout-btn" class="logout-btn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="badges-main">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1 class="page-title">Achievement Badges</h1>
+                <p class="page-subtitle">Track your progress and celebrate your learning milestones</p>
+            </div>
+            <div class="header-actions">
+                <button id="view-leaderboard" class="btn btn-secondary">View Leaderboard</button>
+                <button id="badge-stats-btn" class="btn btn-outline">Statistics</button>
+            </div>
+        </div>
+
+        <!-- Badge Summary -->
+        <div class="badge-summary">
+            <div class="summary-card">
+                <div class="summary-icon badge-icon"></div>
+                <div class="summary-content">
+                    <div id="earned-badges-count" class="summary-number">0</div>
+                    <div class="summary-label">Badges Earned</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon points-icon"></div>
+                <div class="summary-content">
+                    <div id="total-points-count" class="summary-number">0</div>
+                    <div class="summary-label">Total Points</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon progress-icon"></div>
+                <div class="summary-content">
+                    <div id="progress-percentage" class="summary-number">0%</div>
+                    <div class="summary-label">Progress</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon rank-icon"></div>
+                <div class="summary-content">
+                    <div id="user-rank" class="summary-number">-</div>
+                    <div class="summary-label">Rank</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badge Filters -->
+        <div class="badge-filters">
+            <div class="filter-section">
+                <h3>Filter Badges</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Badges</button>
+                    <button class="filter-btn" data-filter="earned">Earned</button>
+                    <button class="filter-btn" data-filter="available">Available</button>
+                </div>
+            </div>
+            <div class="category-section">
+                <h3>Categories</h3>
+                <div class="category-buttons">
+                    <button class="category-btn active" data-category="all">All</button>
+                    <button class="category-btn" data-category="welcome">Welcome</button>
+                    <button class="category-btn" data-category="assignment">Assignment</button>
+                    <button class="category-btn" data-category="attendance">Attendance</button>
+                    <button class="category-btn" data-category="communication">Communication</button>
+                    <button class="category-btn" data-category="achievement">Achievement</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Actions -->
+        <div class="teacher-actions teacher-only" style="display: none;">
+            <div class="actions-header">
+                <h3>Teacher Actions</h3>
+            </div>
+            <div class="actions-buttons">
+                <button id="award-badge-btn" class="btn btn-primary">Award Badge</button>
+                <button id="create-badge-btn" class="btn btn-secondary">Create New Badge</button>
+                <button id="manage-badges-btn" class="btn btn-outline">Manage Badges</button>
+            </div>
+        </div>
+
+        <!-- Badges Grid -->
+        <div class="badges-container">
+            <div id="badges-grid" class="badges-grid">
+                <div class="loading-placeholder">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Loading badges...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Badge Activity -->
+        <div class="recent-activity">
+            <h3>Recent Badge Activity</h3>
+            <div id="recent-badges" class="activity-list">
+                <div class="loading-placeholder">Loading recent activity...</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Badge Detail Modal -->
+    <div id="badge-modal" class="modal-overlay" style="display: none;">
+        <div class="modal badge-modal">
+            <div class="modal-header">
+                <h3 id="badge-modal-title" class="modal-title">Badge Details</h3>
+                <button id="badge-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="badge-detail">
+                    <div class="badge-detail-icon">
+                        <div id="badge-detail-icon" class="badge-icon-large"></div>
+                    </div>
+                    <div class="badge-detail-info">
+                        <h4 id="badge-detail-name" class="badge-name">Badge Name</h4>
+                        <p id="badge-detail-description" class="badge-description">Badge description</p>
+                        <div class="badge-detail-meta">
+                            <span class="badge-points">
+                                <span id="badge-detail-points">0</span> points
+                            </span>
+                            <span class="badge-category">
+                                Category: <span id="badge-detail-category">-</span>
+                            </span>
+                        </div>
+                        <div id="badge-earned-info" class="badge-earned-info" style="display: none;">
+                            <p class="earned-date">Earned on: <span id="badge-earned-date">-</span></p>
+                            <p class="earned-notes" id="badge-earned-notes" style="display: none;">Notes: <span>-</span></p>
+                        </div>
+                    </div>
+                </div>
+                <div id="badge-recipients" class="badge-recipients" style="display: none;">
+                    <h4>Recent Recipients</h4>
+                    <div id="recipients-list" class="recipients-list">
+                        <!-- Recipients will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Award Badge Modal -->
+    <div id="award-modal" class="modal-overlay" style="display: none;">
+        <div class="modal award-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Award Badge</h3>
+                <button id="award-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <form id="award-badge-form" class="award-form">
+                    <div class="form-group">
+                        <label for="award-user-select" class="form-label">Select User</label>
+                        <select id="award-user-select" class="form-select" required>
+                            <option value="">Choose a user...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="award-badge-select" class="form-label">Select Badge</label>
+                        <select id="award-badge-select" class="form-select" required>
+                            <option value="">Choose a badge...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="award-notes" class="form-label">Notes (Optional)</label>
+                        <textarea id="award-notes" class="form-textarea" placeholder="Add a note about why this badge is being awarded..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="award-cancel" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Award Badge</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Badge Modal -->
+    <div id="create-modal" class="modal-overlay" style="display: none;">
+        <div class="modal create-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Badge</h3>
+                <button id="create-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <form id="create-badge-form" class="create-form">
+                    <div class="form-group">
+                        <label for="create-badge-name" class="form-label">Badge Name</label>
+                        <input type="text" id="create-badge-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="create-badge-description" class="form-label">Description</label>
+                        <textarea id="create-badge-description" class="form-textarea" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="create-badge-category" class="form-label">Category</label>
+                        <select id="create-badge-category" class="form-select" required>
+                            <option value="">Select category...</option>
+                            <option value="welcome">Welcome</option>
+                            <option value="assignment">Assignment</option>
+                            <option value="attendance">Attendance</option>
+                            <option value="communication">Communication</option>
+                            <option value="achievement">Achievement</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="create-badge-points" class="form-label">Points</label>
+                        <input type="number" id="create-badge-points" class="form-input" min="0" value="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="create-badge-icon" class="form-label">Icon Class</label>
+                        <input type="text" id="create-badge-icon" class="form-input" value="badge-default">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="create-cancel" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create Badge</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div id="leaderboard-modal" class="modal-overlay" style="display: none;">
+        <div class="modal leaderboard-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Badge Leaderboard</h3>
+                <button id="leaderboard-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="leaderboard-filters">
+                    <select id="leaderboard-role-filter" class="form-select">
+                        <option value="">All Users</option>
+                        <option value="student">Students Only</option>
+                        <option value="teacher">Teachers Only</option>
+                        <option value="guardian">Guardians Only</option>
+                    </select>
+                </div>
+                <div id="leaderboard-list" class="leaderboard-list">
+                    <div class="loading-placeholder">Loading leaderboard...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/badges.js"></script>
+    <script>
+        // Initialize badges page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            checkAuthentication().then(user => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // Initialize page based on user role
+                initializeBadgesPage(user);
+            });
+        });
+
+        async function initializeBadgesPage(user) {
+            // Update user info in header
+            document.getElementById('user-name').textContent = user.full_name;
+            document.getElementById('user-role').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+            
+            // Show teacher-only elements if user is a teacher
+            if (user.role === 'teacher') {
+                document.querySelectorAll('.teacher-only').forEach(el => {
+                    el.style.display = 'block';
+                });
+            }
+            
+            // Load initial data
+            await loadBadgeData();
+            await loadUserBadges();
+            await loadRecentActivity();
+            
+            // Set up event listeners
+            setupEventListeners();
+        }
+
+        async function loadBadgeData() {
+            try {
+                // Load user badge summary
+                const response = await fetch('php/badges-api.php?action=user_badges');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('earned-badges-count').textContent = data.total_badges || 0;
+                    document.getElementById('total-points-count').textContent = data.total_points || 0;
+                    
+                    // Calculate progress (assuming 10 total badges for demo)
+                    const totalBadges = 10;
+                    const progress = Math.round((data.total_badges / totalBadges) * 100);
+                    document.getElementById('progress-percentage').textContent = progress + '%';
+                }
+            } catch (error) {
+                console.error('Error loading badge data:', error);
+                showToast('Failed to load badge data', 'error');
+            }
+        }
+
+        function setupEventListeners() {
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    filterBadges();
+                });
+            });
+            
+            // Category buttons
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    filterBadges();
+                });
+            });
+            
+            // Modal close buttons
+            document.querySelectorAll('.modal-close').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.target.closest('.modal-overlay').style.display = 'none';
+                });
+            });
+            
+            // Teacher action buttons
+            const awardBtn = document.getElementById('award-badge-btn');
+            if (awardBtn) {
+                awardBtn.addEventListener('click', showAwardModal);
+            }
+            
+            const createBtn = document.getElementById('create-badge-btn');
+            if (createBtn) {
+                createBtn.addEventListener('click', showCreateModal);
+            }
+            
+            // Leaderboard button
+            document.getElementById('view-leaderboard').addEventListener('click', showLeaderboard);
+        }
+
+        async function filterBadges() {
+            const filter = document.querySelector('.filter-btn.active').dataset.filter;
+            const category = document.querySelector('.category-btn.active').dataset.category;
+            
+            // This would filter the badges based on the selected criteria
+            // Implementation would depend on the badges.js file
+            console.log('Filtering badges:', { filter, category });
+        }
+
+        function showAwardModal() {
+            document.getElementById('award-modal').style.display = 'flex';
+            // Load users and available badges for the modal
+        }
+
+        function showCreateModal() {
+            document.getElementById('create-modal').style.display = 'flex';
+        }
+
+        function showLeaderboard() {
+            document.getElementById('leaderboard-modal').style.display = 'flex';
+            // Load leaderboard data
+        }
+    </script>
+</body>
+</html>
