@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EduConnect LMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+</head>
+<body class="login-page">
+    <!-- Navigation Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <a href="index.html" class="brand-link">
+                        <h1 class="brand-title">EduConnect</h1>
+                        <span class="brand-subtitle">Learning Management System</span>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Login Container -->
+    <main class="login-container">
+        <div class="login-wrapper">
+            <!-- Login Card -->
+            <div class="login-card">
+                <div class="login-header">
+                    <h2 class="login-title">Welcome Back</h2>
+                    <p class="login-subtitle">Choose your preferred login method</p>
+                </div>
+
+                <!-- Login Methods Tabs -->
+                <div class="login-tabs">
+                    <button class="tab-button active" data-tab="qr">QR Code</button>
+                    <button class="tab-button" data-tab="regular">Username & Password</button>
+                </div>
+
+                <!-- Error/Success Messages -->
+                <div id="message-container" class="message-container" style="display: none;">
+                    <div id="message" class="message"></div>
+                </div>
+
+                <!-- QR Code Login Tab -->
+                <div id="qr-tab" class="tab-content active">
+                    <div class="qr-login-section">
+                        <div class="qr-instructions">
+                            <h3>QR Code Authentication</h3>
+                            <p>Scan the QR code with your mobile device to login securely</p>
+                        </div>
+
+                        <!-- QR Code Generation -->
+                        <div class="qr-generation">
+                            <button id="generate-qr" class="btn btn-primary">Generate QR Code</button>
+                        </div>
+
+                        <!-- QR Code Display -->
+                        <div id="qr-container" class="qr-container" style="display: none;">
+                            <div class="qr-code-wrapper">
+                                <canvas id="qr-code"></canvas>
+                                <div class="qr-status">
+                                    <div id="qr-timer" class="qr-timer"></div>
+                                    <div id="qr-status-text" class="qr-status-text">Waiting for scan...</div>
+                                </div>
+                            </div>
+                            <button id="refresh-qr" class="btn btn-secondary btn-small">Generate New Code</button>
+                        </div>
+
+                        <!-- Manual QR Verification (for testing) -->
+                        <div class="qr-manual-section">
+                            <details class="qr-manual-details">
+                                <summary>Manual QR Verification (Testing)</summary>
+                                <div class="qr-manual-form">
+                                    <div class="form-group">
+                                        <label for="qr-token">QR Token:</label>
+                                        <input type="text" id="qr-token" class="form-input" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="qr-username">Username:</label>
+                                        <input type="text" id="qr-username" class="form-input" placeholder="Enter your username">
+                                    </div>
+                                    <button id="verify-qr" class="btn btn-primary">Verify QR Login</button>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regular Login Tab -->
+                <div id="regular-tab" class="tab-content">
+                    <form id="login-form" class="login-form">
+                        <div class="form-group">
+                            <label for="username" class="form-label">Username or Email</label>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username" 
+                                class="form-input" 
+                                placeholder="Enter your username or email"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                class="form-input" 
+                                placeholder="Enter your password"
+                                required
+                            >
+                        </div>
+
+                        <div class="form-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="remember-me" name="remember">
+                                <span class="checkbox-text">Remember me</span>
+                            </label>
+                            <a href="#" class="forgot-password">Forgot password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full">Login</button>
+                    </form>
+                </div>
+
+                <!-- Demo Accounts -->
+                <div class="demo-accounts">
+                    <h4>Demo Accounts</h4>
+                    <p class="demo-note">Use these accounts to test the system (password: password123)</p>
+                    <div class="demo-buttons">
+                        <button class="demo-btn" data-username="teacher1" data-role="teacher">
+                            Teacher Demo
+                        </button>
+                        <button class="demo-btn" data-username="student1" data-role="student">
+                            Student Demo
+                        </button>
+                        <button class="demo-btn" data-username="guardian1" data-role="guardian">
+                            Guardian Demo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Login Info -->
+            <div class="login-info">
+                <h3>Why Choose EduConnect?</h3>
+                <div class="info-features">
+                    <div class="info-feature">
+                        <div class="info-icon qr-icon"></div>
+                        <div class="info-content">
+                            <h4>Secure QR Authentication</h4>
+                            <p>Login instantly with QR codes - no passwords to remember</p>
+                        </div>
+                    </div>
+                    <div class="info-feature">
+                        <div class="info-icon badge-icon"></div>
+                        <div class="info-content">
+                            <h4>Achievement Badges</h4>
+                            <p>Earn badges and track your learning progress</p>
+                        </div>
+                    </div>
+                    <div class="info-feature">
+                        <div class="info-icon voice-icon"></div>
+                        <div class="info-content">
+                            <h4>Voice Communication</h4>
+                            <p>Connect through personal voice messages</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Authenticating...</div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/qr-auth.js"></script>
+    <script>
+        // Initialize login page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching functionality
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabName = button.dataset.tab;
+                    
+                    // Update active tab button
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Update active tab content
+                    tabContents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === `${tabName}-tab`) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Demo account buttons
+            const demoButtons = document.querySelectorAll('.demo-btn');
+            demoButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const username = button.dataset.username;
+                    const usernameInput = document.getElementById('username');
+                    const passwordInput = document.getElementById('password');
+                    
+                    usernameInput.value = username;
+                    passwordInput.value = 'password123';
+                    
+                    // Switch to regular login tab
+                    document.querySelector('[data-tab="regular"]').click();
+                    
+                    // Focus on login button
+                    setTimeout(() => {
+                        document.querySelector('#login-form button[type="submit"]').focus();
+                    }, 100);
+                });
+            });
+
+            // Regular login form submission
+            const loginForm = document.getElementById('login-form');
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(loginForm);
+                formData.append('action', 'login');
+                
+                showLoading(true);
+                
+                try {
+                    const response = await fetch('php/auth.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        showMessage('Login successful! Redirecting...', 'success');
+                        setTimeout(() => {
+                            window.location.href = data.redirect || 'dashboard.html';
+                        }, 1000);
+                    } else {
+                        showMessage(data.error || 'Login failed', 'error');
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showMessage('Login failed. Please try again.', 'error');
+                } finally {
+                    showLoading(false);
+                }
+            });
+        });
+
+        // Utility functions
+        function showMessage(message, type) {
+            const container = document.getElementById('message-container');
+            const messageEl = document.getElementById('message');
+            
+            messageEl.textContent = message;
+            messageEl.className = `message ${type}`;
+            container.style.display = 'block';
+            
+            setTimeout(() => {
+                container.style.display = 'none';
+            }, 5000);
+        }
+
+        function showLoading(show) {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.style.display = show ? 'flex' : 'none';
+        }
+    </script>
+</body>
+</html>
