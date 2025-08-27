@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Feedback - EduConnect LMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="voice-feedback-page">
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-container">
+            <div class="header-brand">
+                <a href="dashboard.html" class="brand-link">
+                    <h1 class="brand-title">EduConnect</h1>
+                    <span class="brand-subtitle">Voice Communication</span>
+                </a>
+            </div>
+            
+            <div class="header-user">
+                <div class="user-info">
+                    <span id="user-name" class="user-name">Loading...</span>
+                    <span id="user-role" class="user-role">User</span>
+                </div>
+                <div class="user-actions">
+                    <a href="dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+                    <button id="logout-btn" class="logout-btn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="voice-main">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1 class="page-title">Voice Communication</h1>
+                <p class="page-subtitle">Send and receive voice messages to strengthen communication</p>
+            </div>
+            <div class="header-actions">
+                <button id="compose-voice-btn" class="btn btn-primary">Compose Message</button>
+                <button id="refresh-messages" class="btn btn-outline">Refresh</button>
+            </div>
+        </div>
+
+        <!-- Message Stats -->
+        <div class="message-stats">
+            <div class="stat-card">
+                <div class="stat-icon message-icon"></div>
+                <div class="stat-content">
+                    <div id="total-messages" class="stat-number">0</div>
+                    <div class="stat-label">Total Messages</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon unread-icon"></div>
+                <div class="stat-content">
+                    <div id="unread-messages" class="stat-number">0</div>
+                    <div class="stat-label">Unread Messages</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon sent-icon"></div>
+                <div class="stat-content">
+                    <div id="sent-messages" class="stat-number">0</div>
+                    <div class="stat-label">Sent Messages</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon voice-icon"></div>
+                <div class="stat-content">
+                    <div id="voice-messages" class="stat-number">0</div>
+                    <div class="stat-label">Voice Messages</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Message Filters -->
+        <div class="message-filters">
+            <div class="filter-section">
+                <h3>Filter Messages</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Messages</button>
+                    <button class="filter-btn" data-filter="received">Received</button>
+                    <button class="filter-btn" data-filter="sent">Sent</button>
+                    <button class="filter-btn" data-filter="unread">Unread</button>
+                </div>
+            </div>
+            <div class="search-section">
+                <input type="text" id="message-search" class="search-input" placeholder="Search messages...">
+            </div>
+        </div>
+
+        <!-- Messages Container -->
+        <div class="messages-container">
+            <div class="messages-sidebar">
+                <h3>Conversations</h3>
+                <div id="conversations-list" class="conversations-list">
+                    <div class="loading-placeholder">Loading conversations...</div>
+                </div>
+            </div>
+            
+            <div class="messages-main">
+                <div id="conversation-header" class="conversation-header" style="display: none;">
+                    <div class="conversation-info">
+                        <h3 id="conversation-title">Select a conversation</h3>
+                        <p id="conversation-subtitle">Choose a conversation to view messages</p>
+                    </div>
+                    <div class="conversation-actions">
+                        <button id="call-user-btn" class="btn btn-outline">Start Voice Call</button>
+                    </div>
+                </div>
+                
+                <div id="messages-list" class="messages-list">
+                    <div class="no-conversation">
+                        <div class="no-conversation-icon"></div>
+                        <h3>No Conversation Selected</h3>
+                        <p>Select a conversation from the sidebar or compose a new message</p>
+                        <button id="start-conversation-btn" class="btn btn-primary">Start New Conversation</button>
+                    </div>
+                </div>
+                
+                <div id="message-input-area" class="message-input-area" style="display: none;">
+                    <div class="input-controls">
+                        <button id="voice-record-btn" class="voice-btn" title="Record Voice Message">
+                            <span class="voice-icon"></span>
+                        </button>
+                        <div class="text-input-container">
+                            <textarea id="message-text" class="message-input" placeholder="Type your message..."></textarea>
+                            <button id="send-text-btn" class="send-btn" title="Send Message">
+                                <span class="send-icon"></span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Voice Recording Controls -->
+                    <div id="voice-controls" class="voice-controls" style="display: none;">
+                        <div class="recording-status">
+                            <span class="recording-indicator"></span>
+                            <span id="recording-time" class="recording-time">00:00</span>
+                        </div>
+                        <div class="recording-actions">
+                            <button id="stop-recording-btn" class="btn btn-danger">Stop Recording</button>
+                            <button id="cancel-recording-btn" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Voice Playback Controls -->
+                    <div id="voice-playback" class="voice-playback" style="display: none;">
+                        <div class="playback-info">
+                            <span class="playback-duration">Duration: <span id="playback-duration">00:00</span></span>
+                        </div>
+                        <div class="playback-controls">
+                            <button id="play-recording-btn" class="btn btn-outline">Play</button>
+                            <button id="send-voice-btn" class="btn btn-primary">Send Voice Message</button>
+                            <button id="discard-recording-btn" class="btn btn-secondary">Discard</button>
+                        </div>
+                        <audio id="voice-preview" controls style="display: none;"></audio>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Compose Message Modal -->
+    <div id="compose-modal" class="modal-overlay" style="display: none;">
+        <div class="modal compose-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Compose New Message</h3>
+                <button id="compose-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <form id="compose-form" class="compose-form">
+                    <div class="form-group">
+                        <label for="compose-recipient" class="form-label">Recipient</label>
+                        <select id="compose-recipient" class="form-select" required>
+                            <option value="">Select recipient...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="compose-subject" class="form-label">Subject (Optional)</label>
+                        <input type="text" id="compose-subject" class="form-input" placeholder="Message subject">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Message Type</label>
+                        <div class="message-type-tabs">
+                            <button type="button" class="type-tab active" data-type="text">Text Message</button>
+                            <button type="button" class="type-tab" data-type="voice">Voice Message</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Text Message Tab -->
+                    <div id="text-compose" class="compose-tab active">
+                        <div class="form-group">
+                            <label for="compose-message" class="form-label">Message</label>
+                            <textarea id="compose-message" class="form-textarea" placeholder="Type your message..." required></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Voice Message Tab -->
+                    <div id="voice-compose" class="compose-tab">
+                        <div class="voice-compose-area">
+                            <div class="voice-record-section">
+                                <button type="button" id="compose-record-btn" class="record-btn">
+                                    <span class="record-icon"></span>
+                                    <span class="record-text">Start Recording</span>
+                                </button>
+                                <p class="record-help">Click to start recording your voice message</p>
+                            </div>
+                            
+                            <div id="compose-recording" class="recording-section" style="display: none;">
+                                <div class="recording-indicator">
+                                    <span class="pulse-dot"></span>
+                                    <span>Recording... <span id="compose-recording-time">00:00</span></span>
+                                </div>
+                                <button type="button" id="compose-stop-btn" class="btn btn-danger">Stop Recording</button>
+                            </div>
+                            
+                            <div id="compose-playback" class="playback-section" style="display: none;">
+                                <audio id="compose-audio" controls></audio>
+                                <div class="playback-actions">
+                                    <button type="button" id="compose-re-record" class="btn btn-secondary">Re-record</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="compose-cancel" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Detail Modal -->
+    <div id="message-modal" class="modal-overlay" style="display: none;">
+        <div class="modal message-modal">
+            <div class="modal-header">
+                <h3 id="message-modal-title" class="modal-title">Message Details</h3>
+                <button id="message-modal-close" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-content">
+                <div class="message-detail">
+                    <div class="message-meta">
+                        <div class="sender-info">
+                            <strong id="message-sender">Sender Name</strong>
+                            <span id="message-role" class="user-role">Role</span>
+                        </div>
+                        <div class="message-date" id="message-date">Date</div>
+                    </div>
+                    <div class="message-subject" id="message-subject" style="display: none;">
+                        <strong>Subject:</strong> <span></span>
+                    </div>
+                    <div class="message-content">
+                        <div id="message-text-content" class="text-content" style="display: none;"></div>
+                        <div id="message-voice-content" class="voice-content" style="display: none;">
+                            <audio controls></audio>
+                            <div class="voice-info">
+                                <span class="voice-duration">Duration: <span id="voice-duration">00:00</span></span>
+                                <span class="voice-size">Size: <span id="voice-size">0 KB</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="message-actions">
+                        <button id="reply-message-btn" class="btn btn-primary">Reply</button>
+                        <button id="delete-message-btn" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/voice.js"></script>
+    <script>
+        // Initialize voice feedback page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            checkAuthentication().then(user => {
+                if (!user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // Initialize page
+                initializeVoicePage(user);
+            });
+        });
+
+        async function initializeVoicePage(user) {
+            // Update user info in header
+            document.getElementById('user-name').textContent = user.full_name;
+            document.getElementById('user-role').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+            
+            // Load initial data
+            await loadMessageStats();
+            await loadConversations();
+            
+            // Set up event listeners
+            setupVoiceEventListeners();
+        }
+
+        async function loadMessageStats() {
+            try {
+                const response = await fetch('php/voice-api.php?action=messages');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const messages = data.messages || [];
+                    const currentUserId = getCurrentUserId();
+                    
+                    document.getElementById('total-messages').textContent = messages.length;
+                    document.getElementById('unread-messages').textContent = 
+                        messages.filter(m => !m.is_read && m.receiver_id == currentUserId).length;
+                    document.getElementById('sent-messages').textContent = 
+                        messages.filter(m => m.sender_id == currentUserId).length;
+                    document.getElementById('voice-messages').textContent = 
+                        messages.filter(m => m.file_path).length;
+                }
+            } catch (error) {
+                console.error('Error loading message stats:', error);
+                showToast('Failed to load message statistics', 'error');
+            }
+        }
+
+        async function loadConversations() {
+            try {
+                // This would load the list of conversations
+                // For now, we'll show a placeholder
+                const conversationsList = document.getElementById('conversations-list');
+                conversationsList.innerHTML = '<div class="no-conversations">No conversations yet</div>';
+            } catch (error) {
+                console.error('Error loading conversations:', error);
+                showToast('Failed to load conversations', 'error');
+            }
+        }
+
+        function setupVoiceEventListeners() {
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            // Compose message button
+            document.getElementById('compose-voice-btn').addEventListener('click', showComposeModal);
+            
+            // Refresh messages
+            document.getElementById('refresh-messages').addEventListener('click', () => {
+                loadMessageStats();
+                loadConversations();
+                showToast('Messages refreshed', 'success');
+            });
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    filterMessages();
+                });
+            });
+            
+            // Modal close buttons
+            document.querySelectorAll('.modal-close').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.target.closest('.modal-overlay').style.display = 'none';
+                });
+            });
+            
+            // Start conversation button
+            document.getElementById('start-conversation-btn').addEventListener('click', showComposeModal);
+        }
+
+        function showComposeModal() {
+            document.getElementById('compose-modal').style.display = 'flex';
+            loadRecipients();
+        }
+
+        async function loadRecipients() {
+            try {
+                const response = await fetch('php/users.php?action=list');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const select = document.getElementById('compose-recipient');
+                    select.innerHTML = '<option value="">Select recipient...</option>';
+                    
+                    data.users.forEach(user => {
+                        const option = document.createElement('option');
+                        option.value = user.id;
+                        option.textContent = `${user.full_name} (${user.role})`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading recipients:', error);
+                showToast('Failed to load recipients', 'error');
+            }
+        }
+
+        function filterMessages() {
+            const filter = document.querySelector('.filter-btn.active').dataset.filter;
+            console.log('Filtering messages by:', filter);
+            // Implementation would filter the messages based on the selected criteria
+        }
+
+        function getCurrentUserId() {
+            // This would return the current user's ID
+            // Implementation depends on how user data is stored
+            return 1; // Placeholder
+        }
+    </script>
+</body>
+</html>
